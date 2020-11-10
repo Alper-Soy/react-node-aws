@@ -24,26 +24,20 @@ const Layout = ({ children }) => {
   );
 
   const nav = () => (
-    <ul className='nav nav-tabs p-1' style={{ backgroundColor: '#7952b3' }}>
+    <ul className='nav nav-tabs p-1 bg-info'>
       <li className='nav-item'>
         <Link href='/'>
-          <a className='nav-link ' style={{ color: 'rgba(255,255,255,.85)' }}>
-            Home
-          </a>
+          <a className='nav-link text-white '>Home</a>
         </Link>
       </li>
       <li className='nav-item ml-auto'>
         <Link href='/login'>
-          <a className='nav-link ' style={{ color: 'rgba(255,255,255,.85)' }}>
-            Login
-          </a>
+          <a className='nav-link text-white '>Login</a>
         </Link>
       </li>
       <li className='nav-item'>
         <Link href='/register'>
-          <a className='nav-link ' style={{ color: 'rgba(255,255,255,.85)' }}>
-            Register
-          </a>
+          <a className='nav-link  text-white'>Register</a>
         </Link>
       </li>
     </ul>
