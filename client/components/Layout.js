@@ -1,44 +1,50 @@
 import React from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
+import Router from 'next/router';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
+
+Router.onRouteChangeStart = (url) => NProgress.start();
+Router.onRouteChangeComplete = (url) => NProgress.done();
+Router.onRouteChangeError = (url) => NProgress.done();
 
 const Layout = ({ children }) => {
   const head = () => (
-    <link
-      rel='stylesheet'
-      href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css'
-      integrity='sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2'
-      crossorigin='anonymous'
-    />
+    <React.Fragment>
+      <link
+        rel='stylesheet'
+        href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css'
+        integrity='sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2'
+        crossOrigin='anonymous'
+      />
+
+      <link rel='stylesheet' href='/static/css/styles.css' />
+    </React.Fragment>
   );
 
   const nav = () => (
-    <ul className='nav nav-tabs' style={{ backgroundColor: '#7952b3' }}>
+    <ul className='nav nav-tabs p-1' style={{ backgroundColor: '#7952b3' }}>
       <li className='nav-item'>
-        <a
-          className='nav-link '
-          href=''
-          style={{ color: 'rgba(255,255,255,.85)' }}
-        >
-          Home
-        </a>
+        <Link href='/'>
+          <a className='nav-link ' style={{ color: 'rgba(255,255,255,.85)' }}>
+            Home
+          </a>
+        </Link>
       </li>
       <li className='nav-item ml-auto'>
-        <a
-          className='nav-link '
-          href=''
-          style={{ color: 'rgba(255,255,255,.85)' }}
-        >
-          Login
-        </a>
+        <Link href='/login'>
+          <a className='nav-link ' style={{ color: 'rgba(255,255,255,.85)' }}>
+            Login
+          </a>
+        </Link>
       </li>
       <li className='nav-item'>
-        <a
-          className='nav-link '
-          href=''
-          style={{ color: 'rgba(255,255,255,.85)' }}
-        >
-          Register
-        </a>
+        <Link href='/register'>
+          <a className='nav-link ' style={{ color: 'rgba(255,255,255,.85)' }}>
+            Register
+          </a>
+        </Link>
       </li>
     </ul>
   );
