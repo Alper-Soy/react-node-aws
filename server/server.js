@@ -5,6 +5,14 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+mongoose
+  .connect(process.env.DATABASE_CLOUD, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('DB connected'))
+  .catch((err) => console.log(err));
+
 const app = express();
 
 const authRoutes = require('./routes/auth');
