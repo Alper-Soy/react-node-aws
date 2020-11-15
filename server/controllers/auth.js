@@ -2,6 +2,8 @@ const User = require('../models/user');
 const AWS = require('aws-sdk');
 const jwt = require('jsonwebtoken');
 const { registerEmailParams } = require('../helpers/email');
+const shortId = require('shortid');
+const { json } = require('body-parser');
 require('dotenv').config();
 
 AWS.config.update({
@@ -21,7 +23,7 @@ exports.register = (req, res) => {
       console.log(err);
       return res.status(500).send('Server error!');
     }
-    if (user) return res.status(400).json({ err: 'Email is taken' });
+    if (user) return res.status(400).json({ error: 'Email is taken' });
 
     // generate token with user name, email and password
     const token = jwt.sign(
@@ -50,5 +52,38 @@ exports.register = (req, res) => {
           message: 'We could not verify your email. Please try again.',
         });
       });
+  });
+};
+
+exports.registerActivate = (req, res) => {
+  const { token } = req.body;
+  jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, (err, decoded) => {
+    console.log(decoded);
+    if (err) {
+      console.log(err);
+      return res.status(401).json({ error: 'Expired link. Try again' });
+    }
+
+    // const { name, email, password } = jwt.decode(token);
+    const { name, email, password } = decoded;
+    const username = shortId.generate();
+
+    User.findOne({ email }).exec((err, userExist) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send('Server error!');
+      }
+      if (userExist) return res.status(400).json({ error: 'Email is taken' });
+
+      const user = new User({ username, name, email, password });
+      user.save((err, user) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({ error: 'Server error!' });
+        }
+
+        return res.json({ message: 'Registration success. Please login!' });
+      });
+    });
   });
 };
