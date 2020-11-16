@@ -3,7 +3,7 @@ const AWS = require('aws-sdk');
 const jwt = require('jsonwebtoken');
 const { registerEmailParams } = require('../helpers/email');
 const shortId = require('shortid');
-const { json } = require('body-parser');
+const expressJwt = require('express-jwt');
 require('dotenv').config();
 
 AWS.config.update({
@@ -113,3 +113,9 @@ exports.login = (req, res) => {
     });
   });
 };
+
+exports.requireSignin = expressJwt({
+  secret: process.env.JWT_SECRET,
+  algorithms: ['HS256'],
+  userProperty: 'user',
+});
