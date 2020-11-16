@@ -43,7 +43,7 @@ const ActivateAccount = ({ router }) => {
       setState({
         ...state,
         buttonText: 'Activate Account',
-        error: error.response.data.error || error.response.data.message,
+        error: error.response.data.error,
       });
     }
   };

@@ -58,7 +58,7 @@ exports.register = (req, res) => {
 exports.registerActivate = (req, res) => {
   const { token } = req.body;
   jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, (err, decoded) => {
-    console.log(decoded);
+    // console.log(decoded);
     if (err) {
       console.log(err);
       return res.status(401).json({ error: 'Expired link. Try again' });
@@ -84,6 +84,32 @@ exports.registerActivate = (req, res) => {
 
         return res.json({ message: 'Registration success. Please login!' });
       });
+    });
+  });
+};
+
+exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findOne({ email }).exec((err, user) => {
+    if (err || !user)
+      return res.status(400).json({
+        error: 'User with that email does not exist. Please register.',
+      });
+    // authenticate
+    if (!user.authenticate(password))
+      return res.status(400).json({
+        error: 'Email and password do not match!.',
+      });
+    // generate token and send to client
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '7d',
+    });
+    const { _id, name, role } = user;
+
+    return res.json({
+      token,
+      user: { _id, name, email, role },
     });
   });
 };
