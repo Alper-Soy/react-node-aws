@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import Link from 'next/link';
 import Router from 'next/router';
 import axios from 'axios';
 import { showErrorMessage, showSuccessMessage } from '../helpers/alerts';
 import { API } from '../config';
+import { authenticate, isAuth } from '../helpers/auth';
 
 const Login = () => {
   const [state, setState] = useState({
@@ -16,6 +17,10 @@ const Login = () => {
   });
 
   const { email, password, buttonText, success, error } = state;
+
+  useEffect(() => {
+    isAuth() && Router.push('/');
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,7 +43,12 @@ const Login = () => {
         email,
         password,
       });
-      console.log(response);
+
+      authenticate(response, () =>
+        isAuth() && isAuth().role === 'admin'
+          ? Router.push('/admin')
+          : Router.push('user')
+      );
     } catch (error) {
       console.log(error);
       setState({
