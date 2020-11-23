@@ -85,7 +85,10 @@ const Login = () => {
         />
       </div>
       <div className='form-group'>
-        <button className='btn btn-outline-info '>{buttonText}</button>
+        <button className='btn btn-outline-info '>{buttonText}</button>{' '}
+        <Link href='/auth/password/forgot'>
+          <a className='btn btn-outline-danger  float-right'>Forgot Password</a>
+        </Link>
       </div>
     </form>
   );

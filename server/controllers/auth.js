@@ -151,7 +151,7 @@ exports.forgotPassword = (req, res) => {
 
       sendEmail
         .then((data) => {
-          console.log('ses reset pw success', data);
+          // console.log('ses reset pw success', data);
           return res.json({
             message: `Email has been sent to ${email}. Click on the link to reset your password`,
           });
