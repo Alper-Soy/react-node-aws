@@ -1,9 +1,13 @@
 const User = require('../models/user');
 const AWS = require('aws-sdk');
 const jwt = require('jsonwebtoken');
-const { registerEmailParams } = require('../helpers/email');
+const {
+  registerEmailParams,
+  forgotPasswordEmailParams,
+} = require('../helpers/email');
 const shortId = require('shortid');
-const user = require('../models/user');
+const _ = require('lodash');
+
 require('dotenv').config();
 
 AWS.config.update({
@@ -162,4 +166,45 @@ exports.forgotPassword = (req, res) => {
   });
 };
 
-exports.resetPassword = (req, res) => {};
+exports.resetPassword = (req, res) => {
+  const { resetPasswordLink, newPassword } = req.body;
+
+  jwt.verify(
+    resetPasswordLink,
+    process.env.JWT_RESET_PASSWORD,
+    (err, success) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'Expired Link. Try again.',
+        });
+      }
+
+      User.findOne({ resetPasswordLink }).exec((err, user) => {
+        if (err || !user) {
+          return res.status(400).json({
+            error: 'Invalid token. Try again',
+          });
+        }
+
+        const updatedFields = {
+          password: newPassword,
+          resetPasswordLink: '',
+        };
+
+        user = _.extend(user, updatedFields);
+
+        user.save((err, result) => {
+          if (err) {
+            return res.status(400).json({
+              error: 'Password reset failed. Try again',
+            });
+          }
+
+          res.json({
+            message: `Great! Now you can login with your new password`,
+          });
+        });
+      });
+    }
+  );
+};
