@@ -1,3 +1,4 @@
+import React from 'react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { API } from '../../../config';
@@ -45,8 +46,81 @@ const Create = () => {
   };
 
   const handleSubmit = async (e) => {
-    console.log('POST to server');
+    e.preventDefault();
+    console.table({ title, url, categories, type, medium });
   };
+
+  const handleTypeClick = (e) => {
+    setState({ ...state, type: e.target.value, error: '', success: '' });
+  };
+
+  const handleMediumClick = (e) => {
+    setState({ ...state, medium: e.target.value, success: '', error: '' });
+  };
+
+  const showMedium = () => (
+    <React.Fragment>
+      <div className='form-check ml-3'>
+        <label className='form-check-label'>
+          <input
+            type='radio'
+            onClick={handleMediumClick}
+            checked={medium === 'video'}
+            value='video'
+            className='from-check-input'
+            name='medium'
+          />{' '}
+          Video
+        </label>
+      </div>
+
+      <div className='form-check ml-3'>
+        <label className='form-check-label'>
+          <input
+            type='radio'
+            onClick={handleMediumClick}
+            checked={medium === 'book'}
+            value='book'
+            className='from-check-input'
+            name='medium'
+          />{' '}
+          Book
+        </label>
+      </div>
+    </React.Fragment>
+  );
+
+  const showTypes = () => (
+    <React.Fragment>
+      <div className='form-check ml-3'>
+        <label className='form-check-label'>
+          <input
+            type='radio'
+            onClick={handleTypeClick}
+            checked={type === 'free'}
+            value='free'
+            className='from-check-input'
+            name='type'
+          />{' '}
+          Free
+        </label>
+      </div>
+
+      <div className='form-check ml-3'>
+        <label className='form-check-label'>
+          <input
+            type='radio'
+            onClick={handleTypeClick}
+            checked={type === 'paid'}
+            value='paid'
+            className='from-check-input'
+            name='type'
+          />{' '}
+          Paid
+        </label>
+      </div>
+    </React.Fragment>
+  );
 
   const handleToggle = (c) => () => {
     // return the first index or -1
@@ -55,7 +129,6 @@ const Create = () => {
 
     clickedCategory === -1 ? all.push(c) : all.splice(clickedCategory, 1);
 
-    console.log('all >> categories', all);
     setState({ ...state, categories: all, success: '', error: '' });
   };
 
@@ -63,7 +136,7 @@ const Create = () => {
   const showCategories = () => {
     return (
       loadedCategories &&
-      loadedCategories.map((c, i) => (
+      loadedCategories.map((c) => (
         <li className='list-unstyled' key={c._id}>
           <input
             type='checkbox'
@@ -121,10 +194,19 @@ const Create = () => {
               {showCategories()}
             </ul>
           </div>
+
+          <div className='form-group'>
+            <label className='text-muted ml-4'>Type</label>
+            {showTypes()}
+          </div>
+
+          <div className='form-group'>
+            <label className='text-muted ml-4'>Medium</label>
+            {showMedium()}
+          </div>
         </div>
         <div className='col-md-8'>{submitLinkForm()}</div>
       </div>
-      {JSON.stringify(categories)}
     </Layout>
   );
 };
