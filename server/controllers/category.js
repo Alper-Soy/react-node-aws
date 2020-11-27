@@ -25,15 +25,15 @@ exports.read = (req, res) => {};
 
 exports.create = (req, res) => {
   const { name, image, content } = req.body;
-  console.log('image => ', image);
+  // console.log('image => ', image);
   // image data
   const base64Data = new Buffer.from(
     image.replace(/^data:image\/\w+;base64,/, ''),
     'base64'
   );
-  console.log('base64Data => ', base64Data);
+  // console.log('base64Data => ', base64Data);
   const type = image.split(';')[0].split('/')[1];
-  console.log('type => ', type);
+  // console.log('type => ', type);
 
   const slug = slugify(name);
   let category = new Category({ name, content, slug });
@@ -55,6 +55,7 @@ exports.create = (req, res) => {
     console.log('AWS UPLOAD RES DATA', data);
     category.image.url = data.Location;
     category.image.key = data.Key;
+    category.postedBy = req.user._id;
 
     // save to db
     category.save((err, success) => {

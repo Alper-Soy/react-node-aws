@@ -10,14 +10,14 @@ const Home = ({ categories }) => {
         <a
           style={{
             textDecoration: 'none',
-            border: '1px solid #EEEEEE',
+            border: '2px solid #EEEEEE',
             backgroundColor: '#FFFFFF',
             borderRadius: '6px',
             boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
             transition: '.1s linear all',
             color: 'black',
           }}
-          className='bg-light p-3 col-md-4 m-2'
+          className='bg-light p-3 col-md-4'
         >
           <div>
             <div className='row'>
