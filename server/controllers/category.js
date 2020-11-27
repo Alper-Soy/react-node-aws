@@ -13,7 +13,13 @@ const s3 = new AWS.S3({
   region: process.env.AWS_REGION,
 });
 
-exports.list = (req, res) => {};
+exports.list = (req, res) => {
+  Category.find({}).exec((err, data) => {
+    if (err) return res.status(400).json({ error: 'Category could not load!' });
+
+    res.json(data);
+  });
+};
 
 exports.read = (req, res) => {};
 
@@ -67,27 +73,6 @@ exports.create = (req, res) => {
     });
   });
 };
-
-// exports.create = (req, res) => {
-//   const { name, content } = req.body;
-//   const slug = slugify(name);
-//   const image = {
-//     url: `https://via.placeholder.com/200x150.png?text=${process.env.CLIENT_URL}`,
-//     key: 123,
-//   };
-
-//   const category = new Category({ name, image, content });
-//   category.postedBy = req.user._id;
-
-//   category.save((err, data) => {
-//     if (err) {
-//       console.log('CATEGORY CREATE ERROR', err);
-//       return res.status(400).json({ error: 'Category create failed!' });
-//     }
-
-//     return res.json(data);
-//   });
-// };
 
 exports.update = (req, res) => {};
 

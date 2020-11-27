@@ -29,7 +29,7 @@ const Create = ({ user, token }) => {
   const handleChange = (name) => (e) => {
     const value = name === 'image' ? e.target.files[0] : e.target.value;
     const imageName =
-      name === 'image' ? event.target.files[0].name : 'Upload image';
+      name === 'image' ? e.target.files[0].name : 'Upload image';
     formData.set(name, value);
     setState({
       ...state,
