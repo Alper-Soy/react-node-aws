@@ -24,55 +24,99 @@ exports.list = (req, res) => {
 exports.read = (req, res) => {};
 
 exports.create = (req, res) => {
-  let form = new formidable.IncomingForm();
-  form.parse(req, (err, fields, files) => {
+  const { name, image, content } = req.body;
+  console.log('image => ', image);
+  // image data
+  const base64Data = new Buffer.from(
+    image.replace(/^data:image\/\w+;base64,/, ''),
+    'base64'
+  );
+  console.log('base64Data => ', base64Data);
+  const type = image.split(';')[0].split('/')[1];
+  console.log('type => ', type);
+
+  const slug = slugify(name);
+  let category = new Category({ name, content, slug });
+
+  const params = {
+    Bucket: 'hackr-kaloraat',
+    Key: `category/${uuidv4()}.${type}`,
+    Body: base64Data,
+    ACL: 'public-read',
+    ContentEncoding: 'base64',
+    ContentType: `image/${type}`,
+  };
+
+  s3.upload(params, (err, data) => {
     if (err) {
       console.log(err);
-      return res.status(400).json({
-        error: 'Image could not upload',
-      });
+      res.status(400).json({ error: 'Upload to s3 failed' });
     }
+    console.log('AWS UPLOAD RES DATA', data);
+    category.image.url = data.Location;
+    category.image.key = data.Key;
 
-    const { name, content } = fields;
-    const { image } = files;
-
-    const slug = slugify(name);
-    let category = new Category({ name, content, slug });
-
-    if (image.size > 2000000) {
-      return res.status(400).json({
-        error: 'Image should be less than 2mb',
-      });
-    }
-    // upload image to s3
-    const params = {
-      Bucket: 'hackr-alper',
-      Key: `category/${uuidv4()}`,
-      Body: fs.readFileSync(image.path),
-      ACL: 'public-read',
-      ContentType: `image/jpg`,
-    };
-
-    s3.upload(params, (err, data) => {
+    // save to db
+    category.save((err, success) => {
       if (err) {
         console.log(err);
-        res.status(400).json({ error: 'Upload to s3 failed' });
+        res.status(400).json({ error: 'Duplicate category' });
       }
-      console.log('AWS UPLOAD RES DATA', data);
-      category.image.url = data.Location;
-      category.image.key = data.Key;
-
-      // save to db
-      category.save((err, success) => {
-        if (err) {
-          console.log(err);
-          res.status(400).json({ error: 'Duplicate category' });
-        }
-        return res.json(success);
-      });
+      return res.json(success);
     });
   });
 };
+
+// exports.create = (req, res) => {
+//   let form = new formidable.IncomingForm();
+//   form.parse(req, (err, fields, files) => {
+//     if (err) {
+//       console.log(err);
+//       return res.status(400).json({
+//         error: 'Image could not upload',
+//       });
+//     }
+
+//     const { name, content } = fields;
+//     const { image } = files;
+
+//     const slug = slugify(name);
+//     let category = new Category({ name, content, slug });
+
+//     if (image.size > 2000000) {
+//       return res.status(400).json({
+//         error: 'Image should be less than 2mb',
+//       });
+//     }
+//     // upload image to s3
+//     const params = {
+//       Bucket: 'hackr-alper',
+//       Key: `category/${uuidv4()}`,
+//       Body: fs.readFileSync(image.path),
+//       ACL: 'public-read',
+//       ContentType: `image/jpg`,
+//     };
+
+//     s3.upload(params, (err, data) => {
+//       if (err) {
+//         console.log(err);
+//         res.status(400).json({ error: 'Upload to s3 failed' });
+//       }
+//       console.log('AWS UPLOAD RES DATA', data);
+//       category.image.url = data.Location;
+//       category.image.key = data.Key;
+
+//       // save to db
+//       category.save((err, success) => {
+//         if (err) {
+//           console.log(err);
+//           res.status(400).json({ error: 'Duplicate category' });
+//         }
+//         return res.json(success);
+//       });
+//     });
+//   });
+// };
 
 exports.update = (req, res) => {};
 
