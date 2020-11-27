@@ -34,6 +34,17 @@ const Layout = ({ children }) => {
         </Link>
       </li>
 
+      <li className='nav-item'>
+        <Link href='/user/link/create'>
+          <a
+            className='nav-link text-muted  btn btn-warning ml-4'
+            style={{ borderRadius: '0px' }}
+          >
+            Submit a Link
+          </a>
+        </Link>
+      </li>
+
       {!isAuth() && (
         <>
           <li className='nav-item ml-auto'>
