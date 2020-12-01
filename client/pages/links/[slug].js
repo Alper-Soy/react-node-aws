@@ -5,6 +5,7 @@ import axios from 'axios';
 import renderHTML from 'react-render-html';
 import moment from 'moment';
 import { API } from '../../config';
+import InfiniteScroll from 'react-infinite-scroller';
 
 const Links = ({
   query,
@@ -58,7 +59,7 @@ const Links = ({
             {l.type} / {l.medium}
           </span>
           {l.categories.map((c, i) => (
-            <span key={i} className='badge text-success'>
+            <span key={c._id} className='badge text-success'>
               {c.name}
             </span>
           ))}
@@ -80,17 +81,6 @@ const Links = ({
     console.log('response.data.links.length', response.data.links.length);
     setSize(response.data.links.length);
     setSkip(toSkip);
-  };
-
-  const loadMoreButton = () => {
-    return (
-      size > 0 &&
-      size >= limit && (
-        <button onClick={loadMore} className='btn btn-outline-primary btn-lg'>
-          Load more
-        </button>
-      )
-    );
   };
 
   return (
@@ -121,7 +111,18 @@ const Links = ({
         </div>
       </div>
 
-      <div className='text-center pt-4 pb-5'>{loadMoreButton()}</div>
+      {/* <div className='text-center pt-4 pb-5'>{loadMoreButton()}</div> */}
+
+      <div className='row'>
+        <div className='col-md-12 text-center'>
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={loadMore}
+            hasMore={size > 0 && size >= limit}
+            loader={<img src='/static/images/loading.gif' alt='loading' />}
+          ></InfiniteScroll>
+        </div>
+      </div>
     </Layout>
   );
 };
