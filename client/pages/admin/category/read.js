@@ -24,6 +24,10 @@ const Read = ({ user, token }) => {
     setState({ ...state, categories: response.data });
   };
 
+  const confirmDelete = (slug) => {
+    console.log('delete > ', slug);
+  };
+
   const listCategories = () =>
     categories.map((c) => (
       <Link key={c._id} href={`/links/${c.slug}`}>
@@ -41,7 +45,7 @@ const Read = ({ user, token }) => {
         >
           <div>
             <div className='row'>
-              <div className='col-md-4'>
+              <div className='col-md-3'>
                 <img
                   src={c.image && c.image.url}
                   alt={c.name}
@@ -49,8 +53,22 @@ const Read = ({ user, token }) => {
                   className='pr-3'
                 />
               </div>
-              <div className='col-md-8'>
+              <div className='col-md-6'>
                 <h3 style={{ color: '#383838' }}>{c.name}</h3>
+              </div>
+              <div className='col-md-3'>
+                <Link href={`/admin/category/${c.slug}`}>
+                  <button className='btn btn-sm btn-outline-success btn-block mb-1'>
+                    Update
+                  </button>
+                </Link>
+
+                <button
+                  onClick={() => confirmDelete(c.slug)}
+                  className='btn btn-sm btn-outline-danger btn-block'
+                >
+                  Delete
+                </button>
               </div>
             </div>
           </div>
