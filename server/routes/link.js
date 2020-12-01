@@ -14,7 +14,14 @@ const { authMiddleware } = require('../middlewares/authMiddleware');
 const { adminMiddleware } = require('../middlewares/adminMiddleware');
 
 // controllers
-const { create, list, read, update, remove } = require('../controllers/link');
+const {
+  create,
+  list,
+  read,
+  update,
+  remove,
+  clickCount,
+} = require('../controllers/link');
 
 // routes
 router.get('/links', list);
@@ -27,6 +34,7 @@ router.post(
   authMiddleware,
   create
 );
+router.put('/click-count', clickCount);
 router.put(
   '/link/:slug',
   linkUpdateValidator,
