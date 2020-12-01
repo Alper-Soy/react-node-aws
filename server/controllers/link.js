@@ -1,5 +1,20 @@
 const Link = require('../models/link');
 const slugify = require('slugify');
+const category = require('../models/category');
+
+exports.list = (req, res) => {
+  Link.find({}).exec((err, data) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'Could not list links.' });
+    }
+    res.json(data);
+  });
+};
+
+exports.read = (req, res) => {
+
+};
 
 exports.create = (req, res) => {
   const { title, url, categories, type, medium } = req.body;
@@ -17,20 +32,6 @@ exports.create = (req, res) => {
     }
     res.json(data);
   });
-};
-
-exports.list = (req, res) => {
-  Link.find({}).exec((err, data) => {
-    if (err) {
-      console.log(err);
-      return res.status(400).json({ error: 'Could not list links.' });
-    }
-    res.json(data);
-  });
-};
-
-exports.read = (req, res) => {
-  //
 };
 
 exports.update = (req, res) => {
