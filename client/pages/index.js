@@ -6,7 +6,7 @@ import Link from 'next/link';
 const Home = ({ categories }) => {
   const listCategories = () =>
     categories.map((c) => (
-      <Link key={c._id} href='/'>
+      <Link key={c._id} href={`/links/${c.slug}`}>
         <a
           style={{
             textDecoration: 'none',

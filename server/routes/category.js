@@ -25,7 +25,7 @@ const {
 
 // routes
 router.get('/categories', list);
-router.get('/category/:slug', read);
+router.post('/category/:slug', read);
 router.post(
   '/category',
   categoryCreateValidator,
