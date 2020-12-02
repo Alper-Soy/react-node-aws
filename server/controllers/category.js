@@ -158,4 +158,28 @@ exports.update = (req, res) => {
   );
 };
 
-exports.remove = (req, res) => {};
+exports.remove = (req, res) => {
+  const { slug } = req.params;
+
+  Category.findByIdAndRemove({ slug }).exec((err, data) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({
+        error: 'Could not delete category ',
+      });
+    }
+
+    // remove the existing image from s3 before uploading new/updated one
+    const deleteParams = {
+      Bucket: 'hackr-alper',
+      Key: `category/${data.image.key}`,
+    };
+
+    s3.deleteObject(deleteParams, function (err, data) {
+      if (err) console.log('S3 DELETE ERROR DUING ', err);
+      else console.log('S3 DELETED DURING ', data); // deleted
+    });
+
+    res.json({ message: 'Category deleted successfully' });
+  });
+};
