@@ -17,8 +17,8 @@ const withUser = (Page) => {
             contentType: 'application/json',
           },
         });
-
-        user = response.data;
+        console.log('response in withUser', response);
+        user = response.data.user;
         userLinks = response.data.links;
       } catch (error) {
         if (error.response.status === 401) {
@@ -28,7 +28,7 @@ const withUser = (Page) => {
     }
 
     if (user === null) {
-      // rediderect
+      // redirect
       context.res.writeHead(302, {
         Location: '/',
       });

@@ -43,6 +43,6 @@ router.put(
   authMiddleware,
   create
 );
-router.delete('/link/:slug', requireSignin, authMiddleware, remove);
+router.delete('/link/:id', requireSignin, authMiddleware, remove);
 
 module.exports = router;
