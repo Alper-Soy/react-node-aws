@@ -36,7 +36,7 @@ const Read = ({ user, token }) => {
             textDecoration: 'none',
             border: '2px solid #EEEEEE',
             backgroundColor: '#FFFFFF',
-            borderRadius: '6px',
+            // borderRadius: '6px',
             boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
             transition: '.1s linear all',
             color: 'black',

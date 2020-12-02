@@ -63,9 +63,7 @@ const Links = ({
               {c.name}
             </span>
           ))}
-          <span className='badge text-secondary pull-right ml-auto'>
-            {l.clicks} clicks
-          </span>
+         
         </div>
       </div>
     ));
