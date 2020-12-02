@@ -24,7 +24,7 @@ const {
 } = require('../controllers/link');
 
 // routes
-router.get('/links', list);
+router.post('/links', requireSignin, adminMiddleware, list);
 router.get('/link/:id', read);
 router.post(
   '/link',
