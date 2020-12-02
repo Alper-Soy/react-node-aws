@@ -1,3 +1,4 @@
+import React from 'react';
 import Layout from '../../components/Layout';
 import Link from 'next/link';
 import Router from 'next/router';
@@ -60,7 +61,7 @@ const User = ({ user, userLinks, token }) => {
           ))}
           <span className='badge text-secondary'>{l.clicks} clicks</span>
 
-          <Link href={`/user/link/${l.slug}`}>
+          <Link href={`/user/link/${l._id}`}>
             <span className='badge text-warning pull-right'>Update</span>
           </Link>
 

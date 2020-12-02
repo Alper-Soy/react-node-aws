@@ -25,7 +25,7 @@ const {
 
 // routes
 router.get('/links', list);
-router.get('/link/:slug', read);
+router.get('/link/:id', read);
 router.post(
   '/link',
   linkCreateValidator,

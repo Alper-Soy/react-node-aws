@@ -1,21 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Layout from '../../../components/Layout';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import withUser from '../../withUser';
+import { getCookie, isAuth } from '../../../helpers/auth';
 import { API } from '../../../config';
 import { showSuccessMessage, showErrorMessage } from '../../../helpers/alerts';
-import Layout from '../../../components/Layout';
-import { getCookie, isAuth } from '../../../helpers/auth';
 
-const Create = ({ token }) => {
+const Update = ({ oldLink, token }) => {
+  // state
   const [state, setState] = useState({
-    title: '',
-    url: '',
-    categories: [],
+    title: oldLink.title,
+    url: oldLink.url,
+    categories: oldLink.categories,
     loadedCategories: [],
     success: '',
     error: '',
-    type: '',
-    medium: '',
+    type: oldLink.type,
+    medium: oldLink.medium,
   });
 
   const {
@@ -29,6 +30,7 @@ const Create = ({ token }) => {
     medium,
   } = state;
 
+  // load categories when component mounts using useEffect
   useEffect(() => {
     loadCategories();
   }, [success]);
@@ -50,8 +52,8 @@ const Create = ({ token }) => {
     e.preventDefault();
     // console.table({ title, url, categories, type, medium });
     try {
-      const response = await axios.post(
-        `${API}/link`,
+      const response = await axios.put(
+        `${API}/link/${oldLink._id}`,
         { title, url, categories, type, medium },
         {
           headers: {
@@ -59,18 +61,7 @@ const Create = ({ token }) => {
           },
         }
       );
-      console.log(response);
-      setState({
-        ...state,
-        title: '',
-        url: '',
-        success: 'Link is created',
-        error: '',
-        loadedCategories: [],
-        categories: [],
-        type: '',
-        medium: '',
-      });
+      setState({ ...state, success: 'Link is updated' });
     } catch (error) {
       console.log('LINK SUBMIT ERROR', error);
       setState({ ...state, error: error.response.data.error });
@@ -78,7 +69,7 @@ const Create = ({ token }) => {
   };
 
   const handleTypeClick = (e) => {
-    setState({ ...state, type: e.target.value, error: '', success: '' });
+    setState({ ...state, type: e.target.value, success: '', error: '' });
   };
 
   const handleMediumClick = (e) => {
@@ -154,8 +145,12 @@ const Create = ({ token }) => {
     const clickedCategory = categories.indexOf(c);
     const all = [...categories];
 
-    clickedCategory === -1 ? all.push(c) : all.splice(clickedCategory, 1);
-
+    if (clickedCategory === -1) {
+      all.push(c);
+    } else {
+      all.splice(clickedCategory, 1);
+    }
+    console.log('all >> categories', all);
     setState({ ...state, categories: all, success: '', error: '' });
   };
 
@@ -163,10 +158,11 @@ const Create = ({ token }) => {
   const showCategories = () => {
     return (
       loadedCategories &&
-      loadedCategories.map((c) => (
+      loadedCategories.map((c, i) => (
         <li className='list-unstyled' key={c._id}>
           <input
             type='checkbox'
+            checked={categories.includes(c._id)}
             onChange={handleToggle(c._id)}
             className='mr-2'
           />
@@ -199,11 +195,11 @@ const Create = ({ token }) => {
       </div>
       <div>
         <button
-          className='btn btn-outline-info'
-          type='submit'
           disabled={!token}
+          className='btn btn-outline-warning'
+          type='submit'
         >
-          {isAuth() || token ? 'Post' : 'Login to post'}
+          {isAuth() || token ? 'Update' : 'Login to update'}
         </button>
       </div>
     </form>
@@ -213,7 +209,7 @@ const Create = ({ token }) => {
     <Layout>
       <div className='row'>
         <div className='col-md-12'>
-          <h1>Submit Link/URL</h1>
+          <h1>Update Link/URL</h1>
           <br />
         </div>
       </div>
@@ -221,7 +217,7 @@ const Create = ({ token }) => {
         <div className='col-md-4'>
           <div className='form-group'>
             <label className='text-muted ml-4'>Category</label>
-            <ul style={{ maxHeight: '100px', overflowY: 'auto' }}>
+            <ul style={{ maxHeight: '100px', overflowY: 'scroll' }}>
               {showCategories()}
             </ul>
           </div>
@@ -244,9 +240,9 @@ const Create = ({ token }) => {
   );
 };
 
-Create.getInitialProps = ({ req }) => {
-  const token = getCookie('token', req);
-  return { token };
+Update.getInitialProps = async ({ req, token, query }) => {
+  const response = await axios.get(`${API}/link/${query.id}`);
+  return { oldLink: response.data, token };
 };
 
-export default Create;
+export default withUser(Update);
