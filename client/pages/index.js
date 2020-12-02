@@ -2,6 +2,7 @@ import Layout from '../components/Layout';
 import axios from 'axios';
 import { API } from '../config';
 import Link from 'next/link';
+import 'react-quill/dist/quill.bubble.css';
 
 const Home = ({ categories }) => {
   const listCategories = () =>

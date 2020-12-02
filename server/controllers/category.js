@@ -102,6 +102,13 @@ exports.update = (req, res) => {
   const { slug } = req.params;
   const { name, image, content } = req.body;
 
+  // image data
+  const base64Data = new Buffer.from(
+    image.replace(/^data:image\/\w+;base64,/, ''),
+    'base64'
+  );
+  const type = image.split(';')[0].split('/')[1];
+
   Category.findOneAndUpdate({ slug }, { name, content }, { new: true }).exec(
     (err, updated) => {
       if (err) {
@@ -115,7 +122,7 @@ exports.update = (req, res) => {
         // remove the existing image from s3 before uploading new/updated one
         const deleteParams = {
           Bucket: 'hackr-alper',
-          Key: `category/${updated.image.key}`,
+          Key: `${updated.image.key}`,
         };
 
         s3.deleteObject(deleteParams, function (err, data) {
