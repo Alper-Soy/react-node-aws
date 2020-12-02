@@ -94,7 +94,7 @@ const User = ({ user, userLinks, token }) => {
         <span className='text-danger'>/{user.role}</span>
       </h1>
       <hr />
-      {/* <br /> */}
+
       <div className='row'>
         <div className='col-md-4'>
           <ul className='nav flex-column'>
