@@ -12,6 +12,7 @@ const { runValidation } = require('../validators');
 const { requireSignin } = require('../middlewares/requireSignin');
 const { authMiddleware } = require('../middlewares/authMiddleware');
 const { adminMiddleware } = require('../middlewares/adminMiddleware');
+const { canUpdateDeleteLink } = require('../middlewares/canUpdateDeleteLink');
 
 // controllers
 const {
@@ -41,8 +42,24 @@ router.put(
   runValidation,
   requireSignin,
   authMiddleware,
+  canUpdateDeleteLink,
   update
 );
-router.delete('/link/:id', requireSignin, authMiddleware, remove);
+router.put(
+  '/link/admin/:id',
+  linkUpdateValidator,
+  runValidation,
+  requireSignin,
+  adminMiddleware,
+  update
+);
+router.delete(
+  '/link/:id',
+  requireSignin,
+  authMiddleware,
+  canUpdateDeleteLink,
+  remove
+);
+router.delete('/link/admin/:id', requireSignin, adminMiddleware, remove);
 
 module.exports = router;
