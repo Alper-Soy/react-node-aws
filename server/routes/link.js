@@ -36,12 +36,12 @@ router.post(
 );
 router.put('/click-count', clickCount);
 router.put(
-  '/link/:slug',
+  '/link/:id',
   linkUpdateValidator,
   runValidation,
   requireSignin,
   authMiddleware,
-  create
+  update
 );
 router.delete('/link/:id', requireSignin, authMiddleware, remove);
 
