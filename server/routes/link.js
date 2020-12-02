@@ -25,8 +25,6 @@ const {
 } = require('../controllers/link');
 
 // routes
-router.post('/links', requireSignin, adminMiddleware, list);
-router.get('/link/:id', read);
 router.post(
   '/link',
   linkCreateValidator,
@@ -35,7 +33,9 @@ router.post(
   authMiddleware,
   create
 );
+router.post('/links', requireSignin, adminMiddleware, list);
 router.put('/click-count', clickCount);
+router.get('/link/:id', read);
 router.put(
   '/link/:id',
   linkUpdateValidator,

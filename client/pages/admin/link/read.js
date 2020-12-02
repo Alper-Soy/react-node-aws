@@ -40,19 +40,7 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
 
   const listOfLinks = () =>
     allLinks.map((l, i) => (
-      <div
-        style={{
-          textDecoration: 'none',
-          border: '2px solid #EEEEEE',
-          backgroundColor: '#FFFFFF',
-          borderRadius: '6px',
-          boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
-          transition: '.1s linear all',
-          color: 'black',
-        }}
-        key={i}
-        className='row alert alert-primary p-2'
-      >
+      <div key={i} className='row alert alert-primary p-2'>
         <div className='col-md-8' onClick={(e) => handleClick(l._id)}>
           <a href={l.url} target='_blank'>
             <h5 className='pt-2'>{l.title}</h5>
