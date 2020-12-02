@@ -22,6 +22,8 @@ const {
   update,
   remove,
   clickCount,
+  popular,
+  popularInCategory,
 } = require('../controllers/link');
 
 // routes
@@ -61,5 +63,7 @@ router.delete(
   remove
 );
 router.delete('/link/admin/:id', requireSignin, adminMiddleware, remove);
+router.get('/link/popular', popular);
+router.get('/link/popular/:slug', popularInCategory);
 
 module.exports = router;
