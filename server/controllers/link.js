@@ -32,7 +32,7 @@ exports.create = (req, res) => {
     User.find({ categories: { $in: categories } }).exec((err, users) => {
       if (err) {
         throw new Error(err);
-        // console.log('Error finding users to send email on link publish');
+        console.log('Error finding users to send email on link publish');
       }
       Category.find({ _id: { $in: categories } }).exec((err, result) => {
         data.categories = result;
@@ -80,6 +80,7 @@ exports.read = (req, res) => {
   const { id } = req.params;
   Link.findOne({ _id: id }).exec((err, data) => {
     if (err) {
+      console.log(err);
       return res.status(400).json({
         error: 'Error finding link',
       });
@@ -143,6 +144,7 @@ exports.popular = (req, res) => {
     .limit(3)
     .exec((err, links) => {
       if (err) {
+        console.log('popular => error', err);
         return res.status(400).json({
           error: 'Links not found',
         });
@@ -153,7 +155,6 @@ exports.popular = (req, res) => {
 
 exports.popularInCategory = (req, res) => {
   const { slug } = req.params;
-  console.log(slug);
   Category.findOne({ slug }).exec((err, category) => {
     if (err) {
       return res.status(400).json({

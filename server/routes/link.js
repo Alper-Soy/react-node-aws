@@ -37,6 +37,8 @@ router.post(
 );
 router.post('/links', requireSignin, adminMiddleware, list);
 router.put('/click-count', clickCount);
+router.get('/link/popular', popular);
+router.get('/link/popular/:slug', popularInCategory);
 router.get('/link/:id', read);
 router.put(
   '/link/:id',
@@ -63,7 +65,5 @@ router.delete(
   remove
 );
 router.delete('/link/admin/:id', requireSignin, adminMiddleware, remove);
-router.get('/link/popular', popular);
-router.get('/link/popular/:slug', popularInCategory);
 
 module.exports = router;
