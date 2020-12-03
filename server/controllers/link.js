@@ -163,6 +163,7 @@ exports.popularInCategory = (req, res) => {
     }
 
     Link.find({ categories: category })
+      .populate('postedBy', 'name')
       .sort({ clicks: -1 })
       .limit(3)
       .exec((err, links) => {
