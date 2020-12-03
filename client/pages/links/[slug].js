@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
 import Link from 'next/link';
+import Head from 'next/head';
 import axios from 'axios';
 import renderHTML from 'react-render-html';
 import moment from 'moment';
-import { API } from '../../config';
+import { API, APP_NAME } from '../../config';
 import InfiniteScroll from 'react-infinite-scroller';
 
 const Links = ({
@@ -20,6 +21,27 @@ const Links = ({
   const [skip, setSkip] = useState(0);
   const [size, setSize] = useState(totalLinks);
   const [popular, setPopular] = useState([]);
+
+  const stripHTML = (data) => data.replace(/<\/?[^>]+(>|$)/g, '');
+
+  const head = () => (
+    <Head>
+      <title>
+        {category.name} | {APP_NAME}
+      </title>
+      <meta
+        name='description'
+        content={stripHTML(category.content.substring(0, 160))}
+      />
+      <meta property='og:title' content={category.name} />
+      <meta
+        property='og:description'
+        content={stripHTML(category.content.substring(0, 160))}
+      />
+      <meta property='og:image' content={category.image.url} />
+      <meta property='og:image:secure_url' content={category.image.url} />
+    </Head>
+  );
 
   useEffect(() => {
     loadPopular();
@@ -126,41 +148,46 @@ const Links = ({
   };
 
   return (
-    <Layout>
-      <div className='row'>
-        <div className='col-md-8'>
-          <h1 className='display-4 font-weight-bold'>
-            {category.name} - URL/Links
-          </h1>
-          <div className='lead alert alert-light pt-4'>
-            {renderHTML(category.content || '')}
-          </div>
-        </div>
-        <div className='col-md-4'>
-          <img
-            src={category.image.url}
-            alt={category.name}
-            style={{ width: 'auto', maxHeight: '200px' }}
-          />
-        </div>
-      </div>
-      <br />
-
-      <InfiniteScroll
-        pageStart={0}
-        loadMore={loadMore}
-        hasMore={size > 0 && size >= limit}
-        loader={<img key={0} src='/static/images/loading.gif' alt='loading' />}
-      >
+    <Fragment>
+      {head()}
+      <Layout>
         <div className='row'>
-          <div className='col-md-8'>{listOfLinks()}</div>
+          <div className='col-md-8'>
+            <h1 className='display-4 font-weight-bold'>
+              {category.name} - URL/Links
+            </h1>
+            <div className='lead alert alert-light pt-4'>
+              {renderHTML(category.content || '')}
+            </div>
+          </div>
           <div className='col-md-4'>
-            <h2 className='lead'>Most popular in {category.name}</h2>
-            <div className='p-3'>{listOfPopularLinks()}</div>
+            <img
+              src={category.image.url}
+              alt={category.name}
+              style={{ width: 'auto', maxHeight: '200px' }}
+            />
           </div>
         </div>
-      </InfiniteScroll>
-    </Layout>
+        <br />
+
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={loadMore}
+          hasMore={size > 0 && size >= limit}
+          loader={
+            <img key={0} src='/static/images/loading.gif' alt='loading' />
+          }
+        >
+          <div className='row'>
+            <div className='col-md-8'>{listOfLinks()}</div>
+            <div className='col-md-4'>
+              <h2 className='lead'>Most popular in {category.name}</h2>
+              <div className='p-3'>{listOfPopularLinks()}</div>
+            </div>
+          </div>
+        </InfiniteScroll>
+      </Layout>
+    </Fragment>
   );
 };
 

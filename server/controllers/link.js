@@ -141,7 +141,7 @@ exports.popular = (req, res) => {
   Link.find()
     .populate('postedBy', 'name')
     .sort({ clicks: -1 })
-    .limit(3)
+    .limit(5)
     .exec((err, links) => {
       if (err) {
         console.log('popular => error', err);
@@ -165,7 +165,7 @@ exports.popularInCategory = (req, res) => {
     Link.find({ categories: category })
       .populate('postedBy', 'name')
       .sort({ clicks: -1 })
-      .limit(3)
+      .limit(5)
       .exec((err, links) => {
         if (err) {
           return res.status(400).json({
